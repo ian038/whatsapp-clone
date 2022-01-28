@@ -1,4 +1,4 @@
-import { Circle } from 'better-react-spinkit'
+import { Oval } from 'react-loader-spinner'
 
 export default function Loading() {
     return (
@@ -10,7 +10,7 @@ export default function Loading() {
                     width={300}
                     style={{ marginBottom: 15 }}
                 />
-                <Circle color="#13990A" size={50} />
+                <Oval color="#13990A" height={50} width={50} />
             </div>
         </center>
     )
