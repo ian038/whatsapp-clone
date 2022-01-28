@@ -5,8 +5,22 @@ import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { auth, db } from '../firebase'
+import * as EmailValidator from 'email-validator'
 
 export default function Sidebar() {
+
+    const createChat = () => {
+        const email = prompt('Please enter an email to start a conversation.')
+
+        if (!email) return
+
+        if (EmailValidator.validate(email)) {
+
+        }
+
+    }
+
     return (
         <Container>
             <Header>
@@ -18,7 +32,7 @@ export default function Sidebar() {
                     <IconButton>
                         <MoreVertIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => auth.signOut()}>
                         <ExitToAppIcon />
                     </IconButton>
                 </IconsContainer>
@@ -27,6 +41,9 @@ export default function Sidebar() {
                 <SearchIcon />
                 <SearchInput placeholder="Search in Chat" />
             </Search>
+            <SidebarButton onClick={createChat}>
+                Start a new chat
+            </SidebarButton>
         </Container>
     )
 }
