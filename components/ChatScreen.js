@@ -55,10 +55,12 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
     }
 
     const scrollToBottom = () => {
-        endOfMessageRef.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        })
+        if (endOfMessageRef.current) {
+            endOfMessageRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+        }
     }
 
     return (
