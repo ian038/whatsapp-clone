@@ -94,7 +94,7 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
                 </IconButton>
 
                 <Input value={input} onChange={e => setInput(e.target.value)} />
-                <button disabled={!input} type="submit" >Sent message</button>
+                <button hidden disabled={!input} type="submit">Send message</button>
                 <IconButton>
                     <MicNoneIcon />
                 </IconButton>
