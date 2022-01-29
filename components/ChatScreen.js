@@ -12,6 +12,7 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import firebase from 'firebase/compat/app'
 import getRecipientEmail from '../utils/getRecipientEmail';
 import TimeAgo from 'timeago-react'
+import Message from './Message';
 
 export default function ChatScreen({ chat, messages, recipientSnapshot, recipient }) {
     const [input, setInput] = useState('')
@@ -19,6 +20,18 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
     const router = useRouter()
     const recipientEmail = getRecipientEmail(chat.users, user)
     const [messagesSnapshot] = useCollection(db.collection('chats').doc(router.query.id).collection('messages').orderBy('timestamp', 'asc'))
+
+    const showMessages = () => {
+        if (messagesSnapshot) {
+            return messagesSnapshot.docs.map(msg => {
+                return <Message key={msg.id} user={msg.data().user} message={{ ...msg.data(), timestamp: msg.data().timestamp?.toDate().getTime() }} />
+            })
+        } else {
+            return JSON.parse(messages).map(msg => {
+                return <Message key={msg.id} user={msg.user} message={msg} />
+            })
+        }
+    }
 
     const sendMessage = e => {
         e.preventDefault();
@@ -71,10 +84,10 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
                     </IconButton>
                 </HeaderIcons>
             </Header>
-            {/* <MessageContainer>
+            <MessageContainer>
                 {showMessages()}
-                <EndOfMessage ref={endOfMessageRef} />
-            </MessageContainer> */}
+                {/* <EndOfMessage ref={endOfMessageRef} /> */}
+            </MessageContainer>
             <InputContainer onSubmit={sendMessage}>
                 <IconButton>
                     <InsertEmoticonIcon />
