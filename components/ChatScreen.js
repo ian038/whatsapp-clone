@@ -18,15 +18,18 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
     const [input, setInput] = useState('')
     const [user] = useAuthState(auth)
     const router = useRouter()
+    const endOfMessageRef = useRef(null)
     const recipientEmail = getRecipientEmail(chat.users, user)
     const [messagesSnapshot] = useCollection(db.collection('chats').doc(router.query.id).collection('messages').orderBy('timestamp', 'asc'))
 
     const showMessages = () => {
         if (messagesSnapshot) {
+            scrollToBottom()
             return messagesSnapshot.docs.map(msg => {
                 return <Message key={msg.id} user={msg.data().user} message={{ ...msg.data(), timestamp: msg.data().timestamp?.toDate().getTime() }} />
             })
         } else {
+            scrollToBottom()
             return JSON.parse(messages).map(msg => {
                 return <Message key={msg.id} user={msg.user} message={msg} />
             })
@@ -48,6 +51,14 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
         })
 
         setInput('')
+        scrollToBottom()
+    }
+
+    const scrollToBottom = () => {
+        endOfMessageRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        })
     }
 
     return (
@@ -86,13 +97,12 @@ export default function ChatScreen({ chat, messages, recipientSnapshot, recipien
             </Header>
             <MessageContainer>
                 {showMessages()}
-                {/* <EndOfMessage ref={endOfMessageRef} /> */}
+                <EndOfMessage ref={endOfMessageRef} />
             </MessageContainer>
             <InputContainer onSubmit={sendMessage}>
                 <IconButton>
                     <InsertEmoticonIcon />
                 </IconButton>
-
                 <Input value={input} onChange={e => setInput(e.target.value)} />
                 <button hidden disabled={!input} type="submit">Send message</button>
                 <IconButton>
